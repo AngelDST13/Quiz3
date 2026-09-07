@@ -8,16 +8,18 @@ import DashboardCharts from './components/DashboardCharts';
 import OutlierAlerts from './components/OutlierAlerts';
 
 export default function App() {
-  // Inicializa leyendo desde localStorage para no perder información al recargar
   const [invoices, setInvoices] = useState(() => {
     const saved = localStorage.getItem('invoices_quiz3');
-    return saved ? JSON.parse(saved) : initialInvoices;
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed.length >= 8) return parsed;
+    }
+    return initialInvoices;
   });
 
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [activeTab, setActiveTab] = useState('facturacion');
 
-  // Guardar en localStorage cada vez que cambien las facturas
   useEffect(() => {
     localStorage.setItem('invoices_quiz3', JSON.stringify(invoices));
     if (invoices.length > 0 && !selectedInvoice) {
@@ -30,17 +32,27 @@ export default function App() {
     setSelectedInvoice(newInvoice);
   };
 
+  const handleResetData = () => {
+    if (window.confirm('¿Deseas restaurar las 8 facturas de prueba originales?')) {
+      setInvoices(initialInvoices);
+      setSelectedInvoice(initialInvoices[0]);
+      localStorage.setItem('invoices_quiz3', JSON.stringify(initialInvoices));
+    }
+  };
+
   return (
     <div className="app-container">
       <header className="main-header">
-        <h1>Sistema de Facturación & Analítica</h1>
-        <div className="nav-buttons">
+        <div>
+          <h1>Sistema de Facturación & Analítica</h1>
+        </div>
+        <div className="nav-buttons" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           <button
             type="button"
             onClick={() => setActiveTab('facturacion')}
             className={`btn-nav ${activeTab === 'facturacion' ? 'active' : ''}`}
           >
-            Módulo Facturación (Empleado)
+            Módulo Facturación
           </button>
           <button
             type="button"
@@ -48,6 +60,22 @@ export default function App() {
             className={`btn-nav ${activeTab === 'dashboard' ? 'active' : ''}`}
           >
             Dashboard Admin
+          </button>
+          <button
+            type="button"
+            onClick={handleResetData}
+            style={{
+              padding: '8px 12px',
+              borderRadius: '8px',
+              border: '1px solid #cbd5e1',
+              background: '#f8fafc',
+              color: '#64748b',
+              fontSize: '12px',
+              cursor: 'pointer',
+              fontWeight: '600'
+            }}
+          >
+            Reset Dataset (8)
           </button>
         </div>
       </header>
