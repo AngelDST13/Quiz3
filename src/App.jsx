@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { initialInvoices } from './data/initialInvoices';
 import InvoiceForm from './components/InvoiceForm';
 import InvoiceList from './components/InvoiceList';
@@ -8,9 +8,22 @@ import DashboardCharts from './components/DashboardCharts';
 import OutlierAlerts from './components/OutlierAlerts';
 
 export default function App() {
-  const [invoices, setInvoices] = useState(initialInvoices);
-  const [selectedInvoice, setSelectedInvoice] = useState(initialInvoices[0] || null);
+  // Inicializa leyendo desde localStorage para no perder información al recargar
+  const [invoices, setInvoices] = useState(() => {
+    const saved = localStorage.getItem('invoices_quiz3');
+    return saved ? JSON.parse(saved) : initialInvoices;
+  });
+
+  const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [activeTab, setActiveTab] = useState('facturacion');
+
+  // Guardar en localStorage cada vez que cambien las facturas
+  useEffect(() => {
+    localStorage.setItem('invoices_quiz3', JSON.stringify(invoices));
+    if (invoices.length > 0 && !selectedInvoice) {
+      setSelectedInvoice(invoices[0]);
+    }
+  }, [invoices]);
 
   const handleCreateInvoice = (newInvoice) => {
     setInvoices((prev) => [newInvoice, ...prev]);
