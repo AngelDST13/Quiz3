@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 
 export default function DashboardMetrics({ invoices }) {
   const stats = useMemo(() => {
@@ -23,23 +23,40 @@ export default function DashboardMetrics({ invoices }) {
   }, [invoices]);
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
-      <div style={{ background: '#ffffff', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-        <h4 style={{ color: '#64748b', fontSize: '13px' }}>Total Facturado</h4>
-        <p style={{ fontSize: '22px', fontWeight: 'bold', color: '#0f172a' }}>${stats.total.toFixed(2)}</p>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
+        <div style={{ background: '#ffffff', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+          <h4 style={{ color: '#64748b', fontSize: '13px' }}>Total Facturado</h4>
+          <p style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>₡{stats.total.toLocaleString('es-CR', { minimumFractionDigits: 2 })}</p>
+        </div>
+        <div style={{ background: '#ffffff', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+          <h4 style={{ color: '#64748b', fontSize: '13px' }}>N° Facturas</h4>
+          <p style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>{stats.count}</p>
+        </div>
+        <div style={{ background: '#ffffff', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+          <h4 style={{ color: '#64748b', fontSize: '13px' }}>Ticket Promedio</h4>
+          <p style={{ fontSize: '20px', fontWeight: 'bold', color: '#0f172a' }}>₡{stats.avg.toLocaleString('es-CR', { minimumFractionDigits: 2 })}</p>
+        </div>
+        <div style={{ background: '#ffffff', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+          <h4 style={{ color: '#64748b', fontSize: '13px' }}>Proyección Siguiente Período</h4>
+          <p style={{ fontSize: '20px', fontWeight: 'bold', color: '#16a34a' }}>₡{stats.projection.toLocaleString('es-CR', { minimumFractionDigits: 2 })}</p>
+          <small style={{ color: '#94a3b8' }}>(Estimación +15%)</small>
+        </div>
       </div>
+
+      {/* Bloque de Ranking Top 3 Clientes */}
       <div style={{ background: '#ffffff', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-        <h4 style={{ color: '#64748b', fontSize: '13px' }}>N° Facturas</h4>
-        <p style={{ fontSize: '22px', fontWeight: 'bold', color: '#0f172a' }}>{stats.count}</p>
-      </div>
-      <div style={{ background: '#ffffff', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-        <h4 style={{ color: '#64748b', fontSize: '13px' }}>Ticket Promedio</h4>
-        <p style={{ fontSize: '22px', fontWeight: 'bold', color: '#0f172a' }}>${stats.avg.toFixed(2)}</p>
-      </div>
-      <div style={{ background: '#ffffff', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-        <h4 style={{ color: '#64748b', fontSize: '13px' }}>Proyección Siguiente Período</h4>
-        <p style={{ fontSize: '22px', fontWeight: 'bold', color: '#16a34a' }}>${stats.projection.toFixed(2)}</p>
-        <small style={{ color: '#94a3b8' }}>(Estimación +15%)</small>
+        <h4 style={{ color: '#0f172a', marginBottom: '10px', fontSize: '14px' }}>Top 3 Clientes por Facturación</h4>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
+          {stats.topClients.map((client, index) => (
+            <div key={index} style={{ padding: '10px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+              <span style={{ fontWeight: 'bold', color: '#2563eb' }}>#{index + 1}</span> <strong>{client.name}</strong>
+              <div style={{ fontSize: '13px', color: '#475569', marginTop: '2px' }}>
+                ₡{client.amount.toLocaleString('es-CR', { minimumFractionDigits: 2 })}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

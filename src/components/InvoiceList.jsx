@@ -18,7 +18,7 @@ export default function InvoiceList({ invoices, selectedInvoice, onSelectInvoice
               borderRadius: '8px',
               background: selectedInvoice?.id === inv.id ? '#eff6ff' : 'transparent',
               display: 'flex',
-              justifyContent: 'space-between',
+              justify: 'space-between',
               alignItems: 'center',
               marginBottom: '6px'
             }}
@@ -27,7 +27,9 @@ export default function InvoiceList({ invoices, selectedInvoice, onSelectInvoice
               <div style={{ fontWeight: '700', color: '#0f172a' }}>{inv.id} - {inv.clientName}</div>
               <div style={{ fontSize: '12px', color: '#64748b' }}>Emisión: {inv.issueDate}</div>
             </div>
-            <strong style={{ color: '#2563eb', fontSize: '15px' }}>${inv.total.toFixed(2)}</strong>
+            <strong style={{ color: '#2563eb', fontSize: '14px' }}>
+              ₡{inv.total.toLocaleString('es-CR', { minimumFractionDigits: 2 })}
+            </strong>
           </li>
         ))}
       </ul>

@@ -271,7 +271,7 @@ export default function InvoiceForm({ onCreateInvoice }) {
                 min="0"
                 value={item.price}
                 onChange={(e) => handleItemChange(item.id, 'price', e.target.value)}
-                style={{ width: '85px' }}
+                style={{ width: '70px' }}
                 required
               />
               {items.length > 1 && (
