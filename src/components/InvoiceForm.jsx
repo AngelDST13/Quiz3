@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-// Funciones puras declaradas fuera del render
 const generateInvoiceId = () => `FAC-00${Math.floor(Math.random() * 900) + 100}`;
 const getTodayDate = () => new Date().toISOString().split('T')[0];
 const getDueDate = () => new Date(Date.now() + 15 * 86400000).toISOString().split('T')[0];
@@ -11,10 +10,10 @@ export default function InvoiceForm({ onCreateInvoice }) {
   const [clientName, setClientName] = useState('');
   const [clientEmail, setClientEmail] = useState('');
   
-  // Inicializaciones puras usando funciones de inicio diferido
   const [id, setId] = useState(() => generateInvoiceId());
   const [issueDate, setIssueDate] = useState(() => getTodayDate());
   const [dueDate, setDueDate] = useState(() => getDueDate());
+  const [taxRate, setTaxRate] = useState(13); // 13% IVA
   
   const [items, setItems] = useState([
     { id: 1, description: '', quantity: 1, price: 0 }
@@ -45,7 +44,8 @@ export default function InvoiceForm({ onCreateInvoice }) {
   };
 
   const subtotal = items.reduce((acc, item) => acc + item.quantity * item.price, 0);
-  const total = subtotal;
+  const tax = (subtotal * taxRate) / 100;
+  const total = subtotal + tax;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -65,7 +65,8 @@ export default function InvoiceForm({ onCreateInvoice }) {
       paid: false,
       items,
       subtotal,
-      tax: 0,
+      taxRate,
+      tax,
       total
     };
 
@@ -107,12 +108,27 @@ export default function InvoiceForm({ onCreateInvoice }) {
           </div>
         </div>
 
-        <h4 style={{ marginTop: '8px' }}>Ítems</h4>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px' }}>
+          <h4>Ítems</h4>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <label style={{ fontSize: '12px' }}>% IVA:</label>
+            <input type="number" value={taxRate} onChange={(e) => setTaxRate(Number(e.target.value))} style={{ width: '50px', padding: '4px' }} />
+          </div>
+        </div>
+
+        {/* Encabezados claros para identificar los dos inputs numéricos */}
+        <div style={{ display: 'flex', gap: '6px', fontSize: '12px', fontWeight: 'bold', color: '#64748b' }}>
+          <span style={{ flex: 2 }}>Descripción</span>
+          <span style={{ width: '60px' }}>Cant.</span>
+          <span style={{ width: '80px' }}>Precio</span>
+          {items.length > 1 && <span style={{ width: '28px' }}></span>}
+        </div>
+
         {items.map((item) => (
           <div key={item.id} style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
             <input
               type="text"
-              placeholder="Descripción"
+              placeholder="Ej. Teclado USB"
               value={item.description}
               onChange={(e) => handleItemChange(item.id, 'description', e.target.value)}
               required
@@ -121,7 +137,6 @@ export default function InvoiceForm({ onCreateInvoice }) {
             <input
               type="number"
               min="1"
-              placeholder="Cant"
               value={item.quantity}
               onChange={(e) => handleItemChange(item.id, 'quantity', e.target.value)}
               required
@@ -130,7 +145,6 @@ export default function InvoiceForm({ onCreateInvoice }) {
             <input
               type="number"
               min="0"
-              placeholder="Precio"
               value={item.price}
               onChange={(e) => handleItemChange(item.id, 'price', e.target.value)}
               required
@@ -146,8 +160,16 @@ export default function InvoiceForm({ onCreateInvoice }) {
           + Agregar Ítem
         </button>
 
-        <div style={{ marginTop: '12px', borderTop: '1px solid #e2e8f0', paddingTop: '12px' }}>
-          <p style={{ display: 'flex', justifyContent: 'space-between', fontWeight: '700', fontSize: '16px' }}>
+        <div style={{ marginTop: '12px', borderTop: '1px solid #e2e8f0', paddingTop: '12px', fontSize: '14px' }}>
+          <p style={{ display: 'flex', justifyContent: 'space-between', color: '#64748b' }}>
+            <span>Subtotal:</span>
+            <span>${subtotal.toFixed(2)}</span>
+          </p>
+          <p style={{ display: 'flex', justifyContent: 'space-between', color: '#64748b', marginTop: '4px' }}>
+            <span>Impuesto ({taxRate}%):</span>
+            <span>${tax.toFixed(2)}</span>
+          </p>
+          <p style={{ display: 'flex', justifyContent: 'space-between', fontWeight: '700', fontSize: '16px', color: '#0f172a', marginTop: '6px' }}>
             <span>Total:</span>
             <span>${total.toFixed(2)}</span>
           </p>
