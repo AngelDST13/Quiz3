@@ -228,14 +228,14 @@ export default function InvoiceForm({ onCreateInvoice }) {
         <h4 style={{ marginTop: '10px' }}>Ítems de Factura</h4>
 
         {items.map((item) => (
-          <div key={item.id} style={{ display: 'flex', flexDirection: 'column', gap: '4px', background: '#f8fafc', padding: '8px', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+          <div key={item.id} style={{ display: 'flex', flexDirection: 'column', gap: '6px', background: '#f8fafc', padding: '10px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
             <div style={{ display: 'flex', gap: '6px' }}>
               <input
                 type="text"
-                placeholder="Código (Ej. RAM1910)"
+                placeholder="Código"
                 value={item.id}
                 onChange={(e) => handleItemChange(item.id, 'id', e.target.value)}
-                style={{ width: '100px' }}
+                style={{ width: '85px' }}
                 required
               />
               <input
@@ -243,37 +243,41 @@ export default function InvoiceForm({ onCreateInvoice }) {
                 placeholder="Descripción del Producto/Servicio"
                 value={item.description}
                 onChange={(e) => handleItemChange(item.id, 'description', e.target.value)}
-                style={{ flex: 1 }}
+                style={{ flex: 1, minWidth: 0 }}
                 required
               />
             </div>
 
-            <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
               <input
                 type="text"
-                placeholder="N° de Serie (Opcional)"
+                placeholder="N° Serie (Opcional)"
                 value={item.serial}
                 onChange={(e) => handleItemChange(item.id, 'serial', e.target.value)}
-                style={{ flex: 1 }}
+                style={{ flex: 1, minWidth: 0 }}
               />
-              <label style={{ fontSize: '11px' }}>Cant:</label>
-              <input
-                type="number"
-                min="1"
-                value={item.quantity}
-                onChange={(e) => handleItemChange(item.id, 'quantity', e.target.value)}
-                style={{ width: '55px' }}
-                required
-              />
-              <label style={{ fontSize: '11px' }}>Precio (₡):</label>
-              <input
-                type="number"
-                min="0"
-                value={item.price}
-                onChange={(e) => handleItemChange(item.id, 'price', e.target.value)}
-                style={{ width: '70px' }}
-                required
-              />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span style={{ fontSize: '11px', color: '#64748b' }}>Cant:</span>
+                <input
+                  type="number"
+                  min="1"
+                  value={item.quantity}
+                  onChange={(e) => handleItemChange(item.id, 'quantity', e.target.value)}
+                  style={{ width: '45px', padding: '4px' }}
+                  required
+                />
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span style={{ fontSize: '11px', color: '#64748b' }}>Precio:</span>
+                <input
+                  type="number"
+                  min="0"
+                  value={item.price}
+                  onChange={(e) => handleItemChange(item.id, 'price', e.target.value)}
+                  style={{ width: '65px', padding: '4px' }}
+                  required
+                />
+              </div>
               {items.length > 1 && (
                 <button
                   type="button"
