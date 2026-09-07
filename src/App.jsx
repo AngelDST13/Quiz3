@@ -46,7 +46,7 @@ export default function App() {
         <div>
           <h1>Sistema de Facturación & Analítica</h1>
         </div>
-        <div className="nav-buttons" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+        <div className="nav-buttons">
           <button
             type="button"
             onClick={() => setActiveTab('facturacion')}
@@ -60,22 +60,6 @@ export default function App() {
             className={`btn-nav ${activeTab === 'dashboard' ? 'active' : ''}`}
           >
             Dashboard Admin
-          </button>
-          <button
-            type="button"
-            onClick={handleResetData}
-            style={{
-              padding: '8px 12px',
-              borderRadius: '8px',
-              border: '1px solid #cbd5e1',
-              background: '#f8fafc',
-              color: '#64748b',
-              fontSize: '12px',
-              cursor: 'pointer',
-              fontWeight: '600'
-            }}
-          >
-            Reset Dataset (8)
           </button>
         </div>
       </header>
@@ -101,6 +85,23 @@ export default function App() {
             <DashboardMetrics invoices={invoices} />
             <OutlierAlerts invoices={invoices} />
             <DashboardCharts invoices={invoices} />
+
+            <div style={{ textAlign: 'right', marginTop: '12px' }}>
+              <button
+                type="button"
+                onClick={handleResetData}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#94a3b8',
+                  fontSize: '12px',
+                  cursor: 'pointer',
+                  textDecoration: 'underline'
+                }}
+              >
+                Restablecer datos de prueba a valores de fábrica
+              </button>
+            </div>
           </div>
         )}
       </main>
